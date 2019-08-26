@@ -1,0 +1,33 @@
+#drawing {
+  height: 450px;
+  border: 1px solid #ccc;
+}
+#code {
+  height: 150px;
+  border: 1px solid #ccc;
+}
+.icon {
+    width: 1em; height: 1em;
+    vertical-align: -0.15em;
+    stroke:grey;
+    fill: grey;
+    overflow: hidden;
+ }
+.actions{
+    position: fixed;
+    top:0px;
+    right:0px;
+    padding-top:20px;
+    padding-right:20px;
+}
+.actions svg{
+    width:1.2em;
+    height:1.2em;
+    transition: all 0.3s;
+    margin:10px;
+}
+.actions svg.active{
+    fill: black;
+    stroke: black;
+    transform: scale(1.2);
+}
