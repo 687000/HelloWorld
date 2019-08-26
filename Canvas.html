@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,maximum-scale=1.0,minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Canvas</title>
+</head>
+<body>
+    <div id="drawing"></div>
+    <div id="shape" class="actions x">
+        <svg id="pen"class="icon">
+            <use xlink:href="#icon-pencil"></use>
+        </svg>
+        <svg id="rec"class="icon">
+          <rect width="21" height="21" style="fill:white;stroke-width:1.8" /></svg>
+      <svg id="zoom in"class="icon">
+        <text x="0" y="20" font-size="35px">+</text>
+       </svg>
+      <svg id="zoom out"class="icon">
+         <text x="0" y="20" font-size="35px">-</text>
+       </svg>
+    </div>    
+        
+  <div id="code"></div>
+</body>
+<script src="./main.js"></script>
+<script src="//at.alicdn.com/t/font_653877_as5jr2p9ul5idx6r.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.6.3/svg.min.js"></script>
+</html>
