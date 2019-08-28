@@ -17,7 +17,7 @@ var eraserEnabled=false;
 var recEnabled=false;
 const option = {
   'stroke': 'black',
-  'stroke-width': 3,
+  'stroke-width': 4,
   'fill':'none'
 };
 pen.onclick=function(){
@@ -105,9 +105,12 @@ function unselect(){
   }  
 }
 function select(){
+  
   var i=0;
   for(i=0;i<index;i++){
     if(here==1){
+      
+      
       shapes[i].click(function(){
         here--;
         grap.push(i);
@@ -122,8 +125,7 @@ function select(){
           dragging=true;
         }
         else{
-          unselect();
-          
+          unselect();       
         } 
       } 
       else if(recdraggy==true){
@@ -142,14 +144,15 @@ function select(){
   }
 }
 drawing.on("click", event => {
+  if(here!=1){
+    unselect();
+    dragging=false;
+  }
   select();
   var target=shapes[shapes.length-1];
-    if (penEnabled==true) {
-      document.getElementById("code").value="<";
-      document.getElementById("code").value+="polyline points=\""+target.attr('points')+"\" style=\"stroke-width:1;stroke:black;fill-opacity:0\"/>";
+    if (penEnabled==true) {    document.getElementById("code").value="<polyline points=\""+target.attr('points')+"\" style=\"stroke-width:1;stroke:black;fill-opacity:0\"/>";
   } else if(recEnabled==true){
-    document.getElementById("code").value ="<";
-    document.getElementById("code").value+="rect x=\""+target.attr('x')+"\" y=\""+target.attr('y')+"\" width=\""+target.attr('width')+"\"height=\""+target.attr('height')+"\" style=\"stroke-width:1;stroke:black;fill-opacity:0\"/>";
+  document.getElementById("code").value="<rect x=\""+target.attr('x')+"\" y=\""+target.attr('y')+"\" width=\""+target.attr('width')+"\"height=\""+target.attr('height')+"\" style=\"stroke-width:1;stroke:black;fill-opacity:0\"/>";
   }else{
   document.getElementById("code").value ="";
   }
@@ -214,4 +217,5 @@ SVG.Element.prototype.draw.extend('line polyline polygon', {
     delete this.set;
   },
 });
+
 
