@@ -9,16 +9,22 @@ const shapes = [];
 let index = 0;
 let shape;
 /********/
-//画笔、橡皮擦按钮替换
+var dragging=false;
 var penEnabled=false;
+var pendraggy=false;
+var recdraggy=false;
 var eraserEnabled=false;
 var recEnabled=false;
 const option = {
-  stroke: 'black',
-  'stroke-width': 1,
-  'fill-opacity': 0,
+  'stroke': 'black',
+  'stroke-width': 3,
+  'fill':'none'
 };
 pen.onclick=function(){
+    unselect();
+    dragging=false;
+    pendraggy=true;
+    recdraggy=false;
     penEnabled=true;
     eraserEnabled=false;
     recEnabled=false;
@@ -26,14 +32,32 @@ pen.onclick=function(){
     rec.classList.remove('active');
  }
 rec.onclick=function(){
+    unselect();
+    dragging=false;
+    pendraggy=false;
+    recdraggy=true;
     penEnabled=false;
     eraserEnabled=false;
     recEnabled=true;
     pen.classList.remove('active');
     rec.classList.add('active');
 }
-
+//User can copy current SVG content
+copybutton.onclick=function(){
+  var textBox = document.getElementById("code");
+  textBox.select();
+  document.execCommand("copy");
+}
+//User can empty SVG content in the SVG text area
+emptybutton.onclick=function(){
+  document.getElementById("code").value ="";
+}
+//User can draw a rectangle
+//User can draw use a pen 
 const getDrawObject = () => {
+  if(dragging==true){
+    return;
+  }
   if(recEnabled==true){
        return drawing.rect().attr(option);
   }
@@ -41,16 +65,20 @@ const getDrawObject = () => {
     return drawing.polyline().attr(option);
   }   
 }
+var clickoption=false;
+var array = [];
 drawing.on('mousedown', event => {
   const shape = getDrawObject();
   shapes[index] = shape;
   shape.draw(event);
+  //shapes[0].style('stroke:blue');});}
+   
 });
 drawing.on('mousemove', event => {
   if (penEnabled==true && shapes[index]) {
     shapes[index].draw('point', event);
   }
-})
+});
 drawing.on('mouseup', event => {
   if (penEnabled==true) {
     shapes[index].draw('stop', event);
@@ -59,9 +87,73 @@ drawing.on('mouseup', event => {
     shapes[index].draw(event);
   }
   index++;
-})
-
-
+  here=1;
+  dragging=false;
+  grap=[]; 
+});
+//User can view the SVG content once draw an element 
+//User can select SVG content
+var here=1;
+var grap=[];
+function unselect(){
+  var i;
+  for(i=0;i<index;i++){
+    if (typeof shapes[i].fixed === "function") {
+      shapes[i].fixed();
+    }
+    shapes[i].style('stroke:black');
+  }  
+}
+function select(){
+  var i=0;
+  for(i=0;i<index;i++){
+    if(here==1){
+      shapes[i].click(function(){
+        here--;
+        grap.push(i);
+      });
+    }
+    else{
+      unselect();
+      if(pendraggy==true){
+        if((shapes[grap[0]-1]).toString().includes("Polyline")){
+          shapes[grap[0]-1].style('stroke:blue');
+          shapes[grap[0]-1].draggy();
+          dragging=true;
+        }
+        else{
+          unselect();
+          
+        } 
+      } 
+      else if(recdraggy==true){
+        if((shapes[grap[0]-1]).toString().includes("Rect")){
+          shapes[grap[0]-1].style('stroke:blue');
+          shapes[grap[0]-1].draggy();
+          dragging=true;
+        }
+        else{
+          unselect();
+        } 
+      }
+      grap=[];
+      break;
+    }
+  }
+}
+drawing.on("click", event => {
+  select();
+  var target=shapes[shapes.length-1];
+    if (penEnabled==true) {
+      document.getElementById("code").value="<";
+      document.getElementById("code").value+="polyline points=\""+target.attr('points')+"\" style=\"stroke-width:1;stroke:black;fill-opacity:0\"/>";
+  } else if(recEnabled==true){
+    document.getElementById("code").value ="<";
+    document.getElementById("code").value+="rect x=\""+target.attr('x')+"\" y=\""+target.attr('y')+"\" width=\""+target.attr('width')+"\"height=\""+target.attr('height')+"\" style=\"stroke-width:1;stroke:black;fill-opacity:0\"/>";
+  }else{
+  document.getElementById("code").value ="";
+  }
+});
 // This is custom extension of line, polyline, polygon which doesn't draw the circle on the line. 
 SVG.Element.prototype.draw.extend('line polyline polygon', {
 
@@ -122,3 +214,4 @@ SVG.Element.prototype.draw.extend('line polyline polygon', {
     delete this.set;
   },
 });
+
