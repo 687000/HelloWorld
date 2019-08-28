@@ -1,10 +1,30 @@
 #drawing {
   height: 450px;
+  width:100%;
   border: 1px solid #ccc;
 }
 #code {
   height: 150px;
+  width:100%;
   border: 1px solid #ccc;
+}
+.button {
+  border-radius: 2px;
+  background-color:white;
+  color:grey;
+  border: none;
+  padding: 8px 14%;
+  text-align: center;
+  border: 1.5px solid grey;
+  font-size: 14px;
+  cursor: pointer;
+}
+.button:hover {
+  transform: scale(1.1);
+  transition-duration: 0.5s;
+}
+.button:active {
+  border: 1.5px solid black;
 }
 .icon {
     width: 1em; height: 1em;
@@ -13,6 +33,9 @@
     fill: grey;
     overflow: hidden;
  }
+.icon:hover {
+  transform: scale(1.2);
+}
 .actions{
     position: fixed;
     top:0px;
