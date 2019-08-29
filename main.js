@@ -152,7 +152,6 @@ const getDrawObject = () => {
     return drawing.polyline().attr(option);
   }   
 }
-var clickoption=false;
 var array = [];
 drawing.on('mousedown', event => {
   var color="";
