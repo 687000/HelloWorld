@@ -7,7 +7,7 @@
 - User can select custom draw if current tool is pen and user click the custom draw 
 - User can drag and move once element selected 
 - User can zoom in / zoom out the pad (element size will change but the canvas keep same size) 
-- User can drag and move canvas if content is large than the canvas 
+- User can drag and move canvas if content is larger than the canvas 
 - User can view the SVG content once draw an element 
 
 - Bug: unable to select if drawing out of canvas
