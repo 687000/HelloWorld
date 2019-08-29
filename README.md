@@ -10,5 +10,5 @@
 - User can drag and move canvas if content is large than the canvas 
 - User can view the SVG content once draw an element 
 
-- Bug: Unable to select if user draws through button/out of canvas
-- Bug: Must click the canvas once before able to click pen
+- Bug: unable to select if drawing’s path out of canvas
+- Bug: Unselect after dragging if the mouse’ final position if out of the range of the object. When zoom out the speed of mouse is too fast so the selection will be deleted after dragging.
