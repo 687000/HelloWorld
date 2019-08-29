@@ -1,6 +1,6 @@
 /*
-- Bug: unable to select if drawing through button/out of canvas
-- Bug: Must Click the canvas before able to click pen
+- Bug: unable to select if drawing’s path out of canvas
+- Bug: Unselect after dragging if the mouse’ final position if out of the range of the object. When zoom out the speed of mouse is too fast so the selection will be deleted after dragging.
 */
 /*! svg.draw.js - v2.0.3 - 2017-06-19
 * https://github.com/svgdotjs/svg.draw.js
@@ -154,9 +154,16 @@ const getDrawObject = () => {
 var clickoption=false;
 var array = [];
 drawing.on('mousedown', event => {
-  
+  var color="";
+  var objectstyle=JSON.stringify(option);
+  for(k=11;k!=objectstyle.length;k++){
+    if(objectstyle[k]=="'"||objectstyle[k]=="\""){
+      break;
+    }
+    color+=objectstyle[k];
+  }
   const shape = getDrawObject();
-  const style = option;
+  const style =color;
   shapes[index] = shape;
   styles[index] = style;
   shape.draw(event);
@@ -184,26 +191,14 @@ drawing.on('mouseup', event => {
 //User can select SVG content
 var here=1;
 var grap=[];
-var prevgrap=0;
 function unselect(){
   var i;
   for(i=0;i<index;i++){
     if (typeof shapes[i].fixed === "function") {
       
       shapes[i].fixed();
-    }
-     
-  }
-  var color="";
-  var objectstyle=JSON.stringify(styles[prevgrap]);
-  for(k=11;k!=objectstyle.length;k++){
-    if(objectstyle[k]=="'"||objectstyle[k]=="\""){
-      break;
-    }
-    color+=objectstyle[k];
-  } 
-  if(index!=0){
-    shapes[prevgrap].style({stroke:color});
+    } 
+    shapes[i].style({stroke:styles[i+1]});
   }
 }
 function select(){
@@ -220,9 +215,6 @@ function select(){
       
       if(pendraggy==true){
         if((shapes[grap[0]-1]).toString().includes("Polyline")){
-          if(typeof shapes[grap[0]-1].fixed === "function"){
-            prevgrap=grap[0]-1;
-          }
           shapes[grap[0]-1].style('stroke:blue');
           shapes[grap[0]-1].draggy();
           dragging=true;
@@ -233,9 +225,6 @@ function select(){
       } 
       else if(recdraggy==true){
         if((shapes[grap[0]-1]).toString().includes("Rect")){
-          if(typeof shapes[grap[0]-1].fixed === "function"){
-            prevgrap=grap[0]-1;
-          }
           shapes[grap[0]-1].style('stroke:blue');
           shapes[grap[0]-1].draggy();
           dragging=true;
@@ -324,6 +313,8 @@ SVG.Element.prototype.draw.extend('line polyline polygon', {
     delete this.set;
   },
 });
+
+
 
 
 
