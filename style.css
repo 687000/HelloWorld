@@ -1,11 +1,15 @@
 #drawing {
   height: 450px;
-  width:900px;
+  width:1200px;
   border: 1px solid #ccc;
+}
+
+ul,ol{ 
+    list-style: none; 
 }
 #code {
   height: 150px;
-  width:900px;
+  width:1200px;
   border: 1px solid #ccc;
 }
 .button {
@@ -39,7 +43,7 @@
 .actions{
     position: fixed;
     top:0px;
-    left:0px;
+    left:20 18px;
     padding-top:20px;
     padding-left:20px;
 }
@@ -53,4 +57,70 @@
     fill: black;
     stroke: black;
     transform: scale(1.2);
+}
+table, th, td {
+  border: 0.5px solid grey;
+}
+th, td {
+ border-radius: 15%;
+  padding: 10px;
+}
+
+.colorCir{
+    top:60px;
+    left:0px;
+    position: fixed; 
+}
+.colorCir li{
+    border: 1px solid rgb(128, 128, 128);
+    height:20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-bottom:10px;
+}
+.colorCir .red{
+    background:red;
+}     
+.colorCir .yellow{
+    background:rgb(255, 255, 153);
+}  
+.colorCir .blue{
+    background:rgb(0, 128, 255);
+}  
+.colorCir .black{
+    background:black;
+}  
+.colorCir .green{
+    background:rgb(153, 255, 153);
+}  
+.colorCir .active{
+    transform: scale(1.2);
+}
+.colorCir :hover{
+    transform: scale(1.2);
+    transition-duration: 0.5s;
+}
+.lineWidth{
+    position: fixed;
+    left:-14px;
+    top:220px;
+}
+.lineWidth .thin{
+    height:0px;
+    width:40px;
+    border-top:3px solid black;
+    margin:15px;
+}
+.lineWidth .thick{
+    height:0px;
+    width:40px;
+    border-top:8px solid black;
+    margin:15px;
+}
+.lineWidth .active{
+    transform: scale(1.2);
+}
+.lineWidth :hover{
+    transform: scale(1.2);
+    transition-duration: 0.5s;
 }
