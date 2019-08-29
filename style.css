@@ -3,7 +3,6 @@
   width:1200px;
   border: 1px solid #ccc;
 }
-
 ul,ol{ 
     list-style: none; 
 }
@@ -82,7 +81,7 @@ th, td {
     background:red;
 }     
 .colorCir .yellow{
-    background:rgb(255, 255, 153);
+    background:rgb(255, 255, 102);
 }  
 .colorCir .blue{
     background:rgb(0, 128, 255);
