@@ -22,14 +22,25 @@
        </svg>
       <svg id="clear"class="icon">
         <use xlink:href="#icon-delete"></use></svg>
-    </div>    
-        
+      <ul  onclick="selectColor(event)" class='colorCir'>
+        <li id="black"class="black"></li>
+        <li id="red"class="red"></li>
+        <li id="yellow"class="yellow"></li>
+        <li id="blue"class="blue"></li>
+        <li id="green" class="green"></li>
+    </ul>
+          <ul   class='lineWidth'>
+        <li onclick="selectWidth(this.id)" id="thin" class="thin"></li>
+        <li onclick="selectWidth(this.id)" id="thick" class="thick"></li>
+    </ul>
+    </div>  
+  <div> 
   <input type='text' id="code"></input>
   <input type='text' id="code2"></input>
   <button type="button" class="button" id="copybutton">Copy</button>
   <button type="button" class="button" id="emptybutton">Empty</button>
   <button type="button" class="button" id="applybutton">Apply</button>
-  
+  </div> 
   </body>
 <script src="./main.js"></script>
 <script src="//at.alicdn.com/t/font_653877_as5jr2p9ul5idx6r.js"></script>
