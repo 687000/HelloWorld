@@ -324,15 +324,11 @@ SVG.Element.prototype.draw.extend('line polyline polygon', {
     delete this.set;
   },
 });
-
-/*applybutton.onclick=function(){
+applybutton.onclick=function(){
    var textBox = document.getElementById("code").value;
-  textBox="<"+"svg viewBox=\"0 0 1200 450\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">"+textBox;
-  textBox="<div id=\"drawing\" >"+textBox+"</div>";
-  document.getElementById("drawing").innerHTML=textBox;
+  drawing.svg(textBox);
 }
 
-*/
 
 
 
