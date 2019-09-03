@@ -202,6 +202,7 @@ drawing.on('mouseup', event => {
     if(newshape.length()<=2){
       document.getElementById("code").value ="";
       shapes[index].remove();
+      index--;
     }
     else{
       document.getElementById("code").value="<path d=\""+shapes[index].attr('d')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
@@ -211,7 +212,8 @@ drawing.on('mouseup', event => {
     if(recEnabled==true){
       if(shapes[index].attr('width')<=1&&shapes[index].attr('height')<=1){
         document.getElementById("code").value ="";
-      shapes[index].remove();
+        shapes[index].remove();
+        index--;
       }
       else{
         document.getElementById("code").value="<rect x=\""+shapes[index].attr('x')+"\" y=\""+shapes[index].attr('y')+"\" width=\""+shapes[index].attr('width')+"\"height=\""+shapes[index].attr('height')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
@@ -384,5 +386,4 @@ applybutton.onclick=function(){
    var textBox = document.getElementById("code").value;
   drawing.svg(textBox);
 }
-
 
