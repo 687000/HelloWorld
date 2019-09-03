@@ -92,6 +92,10 @@ pen.onclick=function(){
     pen.classList.add('active');
     rec.classList.remove('active');
     zoom_in.classList.remove('active');
+    selectMode.classList.remove('active');
+ }
+selectMode.onclick=function(){
+  selectMode.classList.add('active');
  }
 rec.onclick=function(){
     unselect();
@@ -104,6 +108,7 @@ rec.onclick=function(){
     pen.classList.remove('active');
     rec.classList.add('active');
     zoom_in.classList.remove('active');
+    selectMode.classList.remove('active');
 }
 var viewwideth=drawing.width();
 var viewheight=drawing.height();
@@ -165,6 +170,7 @@ const getDrawObject = () => {
 var clickoption=false;
 var array = [];
 drawing.on('mousedown', event => {
+  selected=1;
   var color="";
   var objectstyle=JSON.stringify(option);
   for(k=11;k!=objectstyle.length;k++){
@@ -179,7 +185,6 @@ drawing.on('mousedown', event => {
   styles[index] = style;
   shape.draw(event);
   //shapes[0].style('stroke:blue');});}
-   
 });
 drawing.on('mousemove', event => {
   if (penEnabled==true && shapes[index]) {
@@ -189,19 +194,25 @@ drawing.on('mousemove', event => {
 drawing.on('mouseup', event => {
   if (penEnabled==true) {
     shapes[index].draw('stop', event);
-    
+    var origin=shapes[index].attr("points");
+    const shape =BezierCurve(origin,colorpicker,widthpicker);
+    const newshape=drawing.path(shape).attr(option);
+   shapes[index].replace(newshape);
+   shapes[index]=newshape;
+    document.getElementById("code").value="<path d=\""+shapes[index].attr('d')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
   } else {
     shapes[index].draw(event);
+    if(recEnabled==true){
+  document.getElementById("code").value="<rect x=\""+shapes[index].attr('x')+"\" y=\""+shapes[index].attr('y')+"\" width=\""+shapes[index].attr('width')+"\"height=\""+shapes[index].attr('height')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
+    }
+    else{     document.getElementById("code").value ="";    
+    }
   }
   index++;
-  here=1;
   dragging=false;
-  grap=[]; 
 });
 //User can view the SVG content once draw an element 
 //User can select SVG content
-var here=1;
-var grap=[];
 function unselect(){
   var i;
   for(i=0;i<index;i++){
@@ -212,56 +223,40 @@ function unselect(){
     shapes[i].style({stroke:styles[i+1]});
   }
 }
-function select(){
+var click = function() {
+  unselect();
+  if(penEnabled==true){
+    if(this.toString().includes("Path")){
+      this.style({stroke:"blue"});
+      this.draggy();
+      dragging=true;
+      selected--;
+    }
+    else{
+      return;
+    }
+  }
+  else if(recEnabled==true){
+    if(this.toString().includes("Rect")){
+      this.style({stroke:"blue"});
+      this.draggy();
+      dragging=true;
+      selected--;
+    }
+    else{
+      return;
+    }
+  }    
+}
+var selected=1;
+drawing.on("click", event => {
+  if(selected==1){
+    unselect();
+    dragging=false; 
+  }
   var i=0;
   for(i=0;i<index;i++){
-    if(here==1){
-      shapes[i].click(function(){
-        here--;
-        grap.push(i);
-      });
-    }
-    else{      
-      unselect();
-      
-      if(pendraggy==true){
-        if((shapes[grap[0]-1]).toString().includes("Polyline")){
-          shapes[grap[0]-1].style('stroke:blue');
-          shapes[grap[0]-1].draggy();
-          dragging=true;
-        }
-        else{
-          unselect(); 
-        } 
-      } 
-      else if(recdraggy==true){
-        if((shapes[grap[0]-1]).toString().includes("Rect")){
-          shapes[grap[0]-1].style('stroke:blue');
-          shapes[grap[0]-1].draggy();
-          dragging=true;
-        }
-        else{
-          unselect();
-        } 
-      }   
-      grap=[];
-      break;
-    }
-  }
-}
-drawing.on("click", event => {
-  if(here!=1){
-    unselect();
-    dragging=false;
-    
-  }
-  select();
-  var target=shapes[shapes.length-1];
-    if (penEnabled==true) {    document.getElementById("code").value="<polyline points=\""+target.attr('points')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
-  } else if(recEnabled==true){
-  document.getElementById("code").value="<rect x=\""+target.attr('x')+"\" y=\""+target.attr('y')+"\" width=\""+target.attr('width')+"\"height=\""+target.attr('height')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
-  }else{
-  document.getElementById("code").value ="";
+    shapes[i].on('click', click);
   }
 });
 // This is custom extension of line, polyline, polygon which doesn't draw the circle on the line. 
@@ -324,9 +319,54 @@ SVG.Element.prototype.draw.extend('line polyline polygon', {
     delete this.set;
   },
 });
-applybutton.onclick=function(){
-   var textBox = document.getElementById("code").value;
-  drawing.svg(textBox);
+
+function BezierCurve(str,colorpicker,widthpicker){
+  var words = str.split(' ');
+  var size =1; 
+  var arrayOfArrays = "";
+for (var i=1; i<words.length; i+=size) {
+  arrayOfArrays+="\["
+                        +words.slice(i,i+size)+"\], ";
+}
+  const smoothing = 0.12
+  const svg = document.getElementById('drawing')
+  const points = eval('\['+arrayOfArrays + '\]');
+  const line = (pointA, pointB) => {
+    const lengthX = pointB[0] - pointA[0];
+    const lengthY = pointB[1] - pointA[1];
+    return {
+      length: Math.sqrt(Math.pow(lengthX, 2)+ Math.pow(lengthY, 2)),
+      angle: Math.atan2(lengthY, lengthX)
+    }
+  }
+  const controlPoint = (lineCalc, smooth) => (current, previous, next, reverse) =>{
+    const p = previous || current;
+    const n = next || current;
+    const l = lineCalc(p, n);
+    const angle = l.angle + (reverse ? Math.PI : 0);
+    const length = l.length * smooth;
+    const x= current[0]+Math.cos(angle) * length;
+    const y = current[1] + Math.sin(angle) * length;
+    return [x, y];
+  }
+  const bezierCommand = (controlPointCalc) => (point, i, a) => {
+    const [cpsX, cpsY] = controlPointCalc(a[i - 1], a[i - 2], point);
+    const [cpeX, cpeY] = controlPointCalc(point, a[i - 1], a[i + 1], true);
+    return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
+  }
+  var d;
+  const svgPath = (points, command) => {
+    d = points.reduce((acc, point, i, a) => i === 0
+      ? `M ${point[0]},${point[1]}`
+      : `${acc} ${command(point, i, a)}`
+  , '')
+    return `<path d="${d}" fill="none" stroke="${colorpicker}" stroke-width=${widthpicker}>`
+  }
+  const controlPointCalc = controlPoint(line, smoothing);
+  const bezierCommandCalc = bezierCommand(controlPointCalc);
+  svgPath(points, bezierCommandCalc);
+  //svg.innerHTML+=svgPath(points, bezierCommandCalc);
+  return d;
 }
 
 
