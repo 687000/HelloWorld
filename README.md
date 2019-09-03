@@ -1,6 +1,6 @@
 # SVG_Canvas
 - User can draw a rectangle
-- User can draw use a pen 
+- User can draw use a pen (optimized the polyline to cubic bézier curve)
 - User can pick different colors and different line widths
 - User can clean canvas 
 - User can select current rectangle if current tool is rectangle and user click the rectangle 
