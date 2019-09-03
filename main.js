@@ -93,13 +93,15 @@ pen.onclick=function(){
     pen.classList.add('active');
     rec.classList.remove('active');
     zoom_in.classList.remove('active');
-    selectMode.classList.remove('active');
+  //  selectMode.classList.remove('active');
  }
+/*
 selectMode.onclick=function(){
   selectMode.classList.add('active');
   pen.classList.remove('active');
   rec.classList.remove('active');
  }
+ */
 rec.onclick=function(){
     unselect();
     dragging=false;
@@ -111,7 +113,7 @@ rec.onclick=function(){
     pen.classList.remove('active');
     rec.classList.add('active');
     zoom_in.classList.remove('active');
-    selectMode.classList.remove('active');
+  //  selectMode.classList.remove('active');
 }
 var viewwideth=drawing.width();
 var viewheight=drawing.height();
@@ -138,9 +140,8 @@ zoom_out.onmouseup=function(){
     zoom_out.classList.remove('active');
  }
 clear.onclick=function(){
-  //document.getElementById("drawing").innerHTML='';
   drawing.clear();
-  selectMode.classList.remove('active');
+//  selectMode.classList.remove('active');
 }
 //User can copy current SVG content
 copybutton.onclick=function(){
@@ -386,4 +387,5 @@ applybutton.onclick=function(){
    var textBox = document.getElementById("code").value;
   drawing.svg(textBox);
 }
+
 
