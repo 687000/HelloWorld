@@ -1,4 +1,5 @@
 /*
+- Bug: sometimes double click is needed to select element
 - Bug: unable to select if drawing’s path out of canvas
 - Bug: Unselect after dragging if the mouse’ final position if out of the range of the object. When zoom out the speed of mouse is too fast so the selection will be deleted after dragging.
 */
@@ -96,6 +97,8 @@ pen.onclick=function(){
  }
 selectMode.onclick=function(){
   selectMode.classList.add('active');
+  pen.classList.remove('active');
+  rec.classList.remove('active');
  }
 rec.onclick=function(){
     unselect();
@@ -137,6 +140,7 @@ zoom_out.onmouseup=function(){
 clear.onclick=function(){
   //document.getElementById("drawing").innerHTML='';
   drawing.clear();
+  selectMode.classList.remove('active');
 }
 //User can copy current SVG content
 copybutton.onclick=function(){
@@ -151,7 +155,6 @@ emptybutton.onclick=function(){
 //User can draw a rectangle
 //User can draw use a pen 
 const getDrawObject = () => {
-  
   option = {
   'stroke': colorpicker,
   'stroke-width': widthpicker,
@@ -167,8 +170,6 @@ const getDrawObject = () => {
     return drawing.polyline().attr(option);
   }   
 }
-var clickoption=false;
-var array = [];
 drawing.on('mousedown', event => {
   selected=1;
   var color="";
@@ -184,7 +185,6 @@ drawing.on('mousedown', event => {
   shapes[index] = shape;
   styles[index] = style;
   shape.draw(event);
-  //shapes[0].style('stroke:blue');});}
 });
 drawing.on('mousemove', event => {
   if (penEnabled==true && shapes[index]) {
@@ -199,17 +199,30 @@ drawing.on('mouseup', event => {
     const newshape=drawing.path(shape).attr(option);
    shapes[index].replace(newshape);
    shapes[index]=newshape;
-    document.getElementById("code").value="<path d=\""+shapes[index].attr('d')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
+    if(newshape.length()<=2){
+      document.getElementById("code").value ="";
+      shapes[index].remove();
+    }
+    else{
+      document.getElementById("code").value="<path d=\""+shapes[index].attr('d')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
+    }
   } else {
     shapes[index].draw(event);
     if(recEnabled==true){
-  document.getElementById("code").value="<rect x=\""+shapes[index].attr('x')+"\" y=\""+shapes[index].attr('y')+"\" width=\""+shapes[index].attr('width')+"\"height=\""+shapes[index].attr('height')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
+      if(shapes[index].attr('width')<=1&&shapes[index].attr('height')<=1){
+        document.getElementById("code").value ="";
+      shapes[index].remove();
+      }
+      else{
+        document.getElementById("code").value="<rect x=\""+shapes[index].attr('x')+"\" y=\""+shapes[index].attr('y')+"\" width=\""+shapes[index].attr('width')+"\"height=\""+shapes[index].attr('height')+"\" style=\"stroke-width:"+widthpicker+";stroke:"+colorpicker+";fill-opacity:0\"/>";
+      }
     }
-    else{     document.getElementById("code").value ="";    
+    else{     
+      document.getElementById("code").value ="";    
     }
   }
   index++;
-  dragging=false;
+  //dragging=false;
 });
 //User can view the SVG content once draw an element 
 //User can select SVG content
@@ -250,13 +263,13 @@ var click = function() {
 }
 var selected=1;
 drawing.on("click", event => {
-  if(selected==1){
-    unselect();
-    dragging=false; 
-  }
   var i=0;
   for(i=0;i<index;i++){
     shapes[i].on('click', click);
+  }
+  if(selected==1){
+    unselect();
+    dragging=false; 
   }
 });
 // This is custom extension of line, polyline, polygon which doesn't draw the circle on the line. 
@@ -319,7 +332,6 @@ SVG.Element.prototype.draw.extend('line polyline polygon', {
     delete this.set;
   },
 });
-
 function BezierCurve(str,colorpicker,widthpicker){
   var words = str.split(' ');
   var size =1; 
@@ -368,7 +380,9 @@ for (var i=1; i<words.length; i+=size) {
   //svg.innerHTML+=svgPath(points, bezierCommandCalc);
   return d;
 }
-
-
+applybutton.onclick=function(){
+   var textBox = document.getElementById("code").value;
+  drawing.svg(textBox);
+}
 
 
