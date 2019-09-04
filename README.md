@@ -12,4 +12,3 @@
 - User can put the SVG in the SVG text area and click the apply button to show the SVG content in the draw pad 
 
 - Bug: unable to select if drawing out of canvas
-- Bug: Unselect after dragging if the mouse’ final position if out of the range of the object. When zoom out the speed of mouse is too fast so the selection will be deleted after dragging.
