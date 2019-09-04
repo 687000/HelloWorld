@@ -1,5 +1,5 @@
 /*
-- Bug: unable to select if drawing’s path out of canvas
+- Bug: unable to select if drawing out of canvas
 - Bug: Unselect after dragging if the mouse’ final position if out of the range of the object. When zoom out the speed of mouse is too fast so the selection will be deleted after dragging.
 */
 /*! svg.draw.js - v2.0.3 - 2017-06-19
