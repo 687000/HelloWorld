@@ -1,5 +1,4 @@
 /*
-- Bug: sometimes double click is needed to select element
 - Bug: unable to select if drawing’s path out of canvas
 - Bug: Unselect after dragging if the mouse’ final position if out of the range of the object. When zoom out the speed of mouse is too fast so the selection will be deleted after dragging.
 */
@@ -200,6 +199,7 @@ drawing.on('mouseup', event => {
     const newshape=drawing.path(shape).attr(option);
    shapes[index].replace(newshape);
    shapes[index]=newshape;
+    
     if(newshape.length()<=2){
       document.getElementById("code").value ="";
       shapes[index].remove();
@@ -225,6 +225,7 @@ drawing.on('mouseup', event => {
     }
   }
   index++;
+  
   //dragging=false;
 });
 //User can view the SVG content once draw an element 
@@ -233,7 +234,6 @@ function unselect(){
   var i;
   for(i=0;i<index;i++){
     if (typeof shapes[i].fixed === "function") {
-      
       shapes[i].fixed();
     } 
     shapes[i].style({stroke:styles[i+1]});
@@ -265,11 +265,14 @@ var click = function() {
   }    
 }
 var selected=1;
-drawing.on("click", event => {
+drawing.on("mousedown", event => {
   var i=0;
   for(i=0;i<index;i++){
     shapes[i].on('click', click);
   }
+
+});
+drawing.on("mouseup", event => {
   if(selected==1){
     unselect();
     dragging=false; 
@@ -387,5 +390,4 @@ applybutton.onclick=function(){
    var textBox = document.getElementById("code").value;
   drawing.svg(textBox);
 }
-
 
