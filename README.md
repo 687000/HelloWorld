@@ -10,5 +10,6 @@
 - User can drag and move canvas if content is larger than the canvas 
 - User can view the SVG content once draw an element 
 - User can put the SVG in the SVG text area and click the apply button to show the SVG content in the draw pad 
+- User can download SVG
 
 - Bug: unable to select if drawing out of canvas
