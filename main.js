@@ -142,6 +142,39 @@ clear.onclick=function(){
   drawing.clear();
 //  selectMode.classList.remove('active');
 }
+download.onmousedown=function(){
+    unselect();
+    dragging=false;
+    pendraggy=false;
+    recdraggy=false;
+    penEnabled=false;
+    eraserEnabled=false;
+    recEnabled=false;
+    pen.classList.remove('active');
+    rec.classList.remove('active');
+    zoom_in.classList.remove('active');
+    rec.classList.remove('active');
+    zoom_in.classList.remove('active');
+    download.classList.add('active');
+    var svg = document.getElementById("drawing");
+  var serializer = new XMLSerializer();
+  var source = serializer.serializeToString(svg);
+  if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');}
+  if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');}
+  source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+  var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+    var a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href=url;
+    a.download='My Annotation';
+    a.click();
+  //  selectMode.classList.remove('active');
+ }
+download.onmouseup=function(){
+    download.classList.remove('active');
+ }
 //User can copy current SVG content
 copybutton.onclick=function(){
   var textBox = document.getElementById("code");
@@ -390,4 +423,3 @@ applybutton.onclick=function(){
    var textBox = document.getElementById("code").value;
   drawing.svg(textBox);
 }
-
