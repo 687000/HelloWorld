@@ -304,9 +304,17 @@ var newViewBoxHeight=450;
 applybutton.onclick=function(){
   newViewBoxWidth=1200;
   newViewBoxHeight=450;
-  unselect();
-  
-  drawing.clear();
+  var simulateClick = function (elem) {
+    var evt = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+	// If cancelled, don't dispatch our event
+    var canceled = !elem.dispatchEvent(evt);
+  };
+  var someLink = document.querySelector('#clear');
+  simulateClick(someLink);
   var textBox = document.getElementById("code").value;
   var index= textBox.search(/viewBox=/);
   var front=false;
