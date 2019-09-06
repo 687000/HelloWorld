@@ -403,12 +403,41 @@ var click = function() {
 }
 var selected=1;
 drawing.on("mousedown", event => {
+  if(eraserEnabled==true){
+    started=true;
+  }
   var i=0;
   for(i=0;i<index;i++){
     shapes[i].on('click', click);
   }
 });
+var mouseovererase = function(){
+  this.style({stroke:"none"});
+  this.selectize(false, {deepSelect:true});
+}
+var started=false;
+var selected=1;
+drawing.on("mousedown", event => {
+  if(eraserEnabled==true){
+    started=true;
+  }
+  var i=0;
+  for(i=0;i<index;i++){
+    shapes[i].on('click', click);
+  }
+});
+drawing.on("mousemove", event => {
+  if(eraserEnabled==true){
+    if(started==true){
+      var i=0;
+      for(i=0;i<index;i++){
+        shapes[i].on('mouseover', mouseovererase);
+      }
+    }
+  }
+});
 drawing.on("mouseup", event => {
+  started=false;       
   if(selected==1){
       unselect();
       dragging=false; 
