@@ -67,8 +67,8 @@ th, td {
 }
 
 .colorCir{
-    top:60px;
-    left:0px;
+    left:-10px;
+    top:70px;
     position: fixed; 
 }
 .colorCir li{
@@ -102,7 +102,7 @@ th, td {
 }
 .lineWidth{
     position: fixed;
-    left:-14px;
+    left:-25px;
     top:220px;
 }
 .lineWidth .thin{
