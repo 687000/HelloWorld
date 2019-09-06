@@ -3,7 +3,7 @@
 - User can draw use a pen (optimized the polyline to cubic bézier curve)
 - User can draw use a highlighter (optimized the polyline to cubic bézier curve)
 - User can pick different colors and different line widths
-- User can erase elements by click
+- User can use eraser
 - User can clean canvas 
 - User can select current rectangle if current tool is rectangle and user click the rectangle 
 - User can select custom draw if current tool is pen and user click the custom draw 
