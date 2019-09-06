@@ -245,14 +245,16 @@ download.onmousedown=function(){
   var index= source.search(/viewBox=/);
   var k=0;
   var replaceViewBox="";
-  for(k=index+9;k<source.length-index-9;k++){
-    if(source[k]=="\""||source[k]=="\'"){
-      break;
+  if(index!=-1){
+    for(k=index+9;k<source.length-index-9;k++){
+      if(source[k]=="\""||source[k]=="\'"){
+        break;
+      }
+      replaceViewBox+=source[k];
     }
-    replaceViewBox+=source[k];
+    source= source.replace(replaceViewBox, "0,0,1200,450");
   }
-  source= source.replace(replaceViewBox, "0,0,1200,450");
-  if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+ console.log(source); if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
     source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');}
   if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
     source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');}
