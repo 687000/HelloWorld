@@ -161,14 +161,15 @@ var viewheight=drawing.height();
 var coordinateX=0;
 var coordinateY=0;
 zoom_in.onmousedown=function(){
+
   viewwidth=viewwidth*0.8;
   viewheight=viewheight*0.8;
   drawing.viewbox(coordinateX, coordinateY, viewwidth,viewheight);
-    pen.classList.remove('active');
-    eraser.classList.remove('active');
-    highlighter.classList.remove('active');
-    rec.classList.remove('active');
-    zoom_in.classList.add('active');
+  pen.classList.remove('active');
+  eraser.classList.remove('active');
+  highlighter.classList.remove('active');
+  rec.classList.remove('active');
+  zoom_in.classList.add('active');
  }
 zoom_in.onmouseup=function(){
     zoom_in.classList.remove('active');
@@ -191,7 +192,6 @@ document.getElementById("drawing").addEventListener("keydown", function(event){
     coordinateX-=(viewwidth*0.05);
     drawing.viewbox(coordinateX,coordinateY, viewwidth,viewheight);
   }
-  console.log(key);
 });
 zoom_out.onmousedown=function(){
   viewwidth=viewwidth*1.25;
@@ -241,11 +241,13 @@ download.onmousedown=function(){
     var svg = document.getElementById("drawing");
   var serializer = new XMLSerializer();
   var source = serializer.serializeToString(svg);
-  console.log(source);
+  //console.log(source);
   var index= source.search(/viewBox=/);
+  var index1= source.search(/"=""/);
   var k=0;
   var replaceViewBox="";
-  if(index!=-1){
+  if(index!=-1&&index1==-1){
+    replaceViewBox="";
     for(k=index+9;k<source.length-index-9;k++){
       if(source[k]=="\""||source[k]=="\'"){
         break;
@@ -254,18 +256,35 @@ download.onmousedown=function(){
     }
     source= source.replace(replaceViewBox, "0,0,1200,450");
   }
- console.log(source); if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+  else if(index!=-1&&index1!=-1){
+    replaceViewBox="";
+        for(k=index+9;k<source.length-index-9;k++){
+      if(source[k]=="\""||source[k]=="\'"){
+        break;
+      }
+      replaceViewBox+=source[k];
+    }
+    source= source.replace(replaceViewBox, "0 0 "+newViewBoxWidth+" "+newViewBoxHeight);
+    var newViewBox="viewBox=\"0 0  "+newViewBoxWidth+" "+newViewBoxHeight+"\""; 
+    source=source.replace(/"=""/,newViewBox);
+  }
+  else if(index==-1&&index1!=-1){
+    var newViewBox="viewBox=\"0 0  "+newViewBoxWidth+" "+newViewBoxHeight+"\""; 
+    source=source.replace(/"=""/,newViewBox);
+  }  if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
     source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');}
   if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
     source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');}
   source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
   var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
-    var a = document.createElement('a');
-    document.body.appendChild(a);
-    a.href=url;
-    a.download='My Annotation';
-    a.click();
+  var a = document.createElement('a');
+  document.body.appendChild(a);
+  a.href=url;
+  a.download='My Annotation';
+  a.click();
   //  selectMode.classList.remove('active');
+ // 
+ //
  }
 download.onmouseup=function(){
     download.classList.remove('active');
@@ -280,9 +299,33 @@ copybutton.onclick=function(){
 emptybutton.onclick=function(){
   document.getElementById("code").value ="";
 }
+var newViewBoxWidth=1200;
+var newViewBoxHeight=450;
 applybutton.onclick=function(){
+  newViewBoxWidth=1200;
+  newViewBoxHeight=450;
+  unselect();
+  
   drawing.clear();
-   var textBox = document.getElementById("code").value;
+  var textBox = document.getElementById("code").value;
+  var index= textBox.search(/viewBox=/);
+  var front=false;
+  var removeViewBox="";
+  for(k=index;k<textBox.length-index;k++){
+    if(textBox[k]=="\""||textBox[k]=="\'"){
+      if(front==false){
+        front=true;
+      }
+      else{
+        break;
+      } 
+    }
+    removeViewBox+=textBox[k];
+  }
+  var regexStr= removeViewBox.match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+  newViewBoxWidth=regexStr[3];
+  newViewBoxHeight=regexStr[4];
+  textBox=textBox.replace(removeViewBox,'');
   drawing.svg(textBox);
 }
 //User can draw a rectangle
@@ -367,6 +410,7 @@ drawing.on('mouseup', event => {
 //User can select SVG content
 function unselect(){
   var i;
+    
   for(i=0;i<index;i++){
     if (typeof shapes[i].fixed === "function") {
       shapes[i].fixed();
